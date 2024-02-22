@@ -1,0 +1,9 @@
+
+<div class="col-md-8">
+    <form id="contact-form" action="{%  url 'detail' topic.id topic.slug  %}" method="post">
+        <h2>Add a new comment</h2>
+        {{ form.as_p }}
+        {% csrf_token %}
+        <button class="btn btn-primary" type="submit">Add Comment</button>
+    </form>
+</div>

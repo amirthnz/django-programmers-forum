@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block extrahead %}{% endblock %}
+
+{% block content %}
+    <h1>Programmer's forum</h1>
+    <form method="post">
+        <form action="{% url 'index' %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Create topic</button>
+        </form>
+    </form>
+    <br>
+    <hr>
+    {% for topic in topics %}
+        <h3 style="color: darkcyan;"><a href="{{ topic.get_absolute_url }}">{{ topic.title }}</a></h3>
+        <p>
+            {{ topic.content }}
+        </p>
+        <p style="color: #474747;">
+            by {{ topic.auther }} {{ topic.created|timesince }} ago
+        </p>
+        <a href="{{ topic.get_absolute_url }}">Join Topic</a>
+        <hr>
+        <br>
+    {% endfor %}
+{% endblock %}
+
+{% block jscode %}{% endblock %}

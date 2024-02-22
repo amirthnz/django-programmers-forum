@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ topic.title }}{% endblock %}
+
+{% block extrahead %}{% endblock %}
+
+{% block content %}
+
+    <h3 style="color: darkcyan;">{{ topic.title }}</h3>
+    <p>
+        {{ topic.content }}
+    </p>
+    <p style="color: #474747;">
+        by {{ topic.auther }} {{ topic.created|timesince }} ago
+    </p>
+    <br>
+    <hr>
+    {% with comments.count as total_comments %}
+ <h2>
+ {{ total_comments }} comment{{ total_comments|pluralize }}
+ </h2>
+ {% endwith %}
+    {% for comment in comments %}
+        <div class="col-md-8">
+            <div class="card card-body">
+                <div class="card card-title">
+                    by {{ comment.auther }} {{ comment.created|timesince }} ago
+                </div>
+                <p>{{ comment.content }}</p>
+                
+            </div>
+        </div>
+        <br>
+    {% empty %}
+        <p>There are no comments.</p>
+    {% endfor %}
+    <div id="alert" style="display:none;"></div>
+    {% include "forum/includes/comment_form.html" %}
+
+{% endblock %}
+
+{% block jscode %}
+
+<script>
+    $(function() {
+    $('#contact-form').on('submit', function(event) {
+      event.preventDefault();
+      $.ajax({
+        url: "{%  url 'detail' topic.id topic.slug  %}",
+        type: 'POST',
+        data: $(this).serialize(),
+        dataType: 'json',
+        success: function(response) {
+          if (response.success) {
+            $('#alert').html('<div class="alert alert-success">Thank you for your message!</div>').show();
+          } else {
+            $('#alert').html('<div class="alert alert-danger">' + response.errors + '</div>').show();
+          }
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock %}
